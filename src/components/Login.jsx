@@ -18,7 +18,7 @@ function Login() {
             pin
         }
 
-        if (user.pin == "5555") {
+        if (user.pin == "3052") {
             cookies.set("pin", user.pin);
             setIsAuth(true);
             navigate('/stocks')

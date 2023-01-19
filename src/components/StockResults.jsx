@@ -4,25 +4,30 @@ import axios from 'axios'
 
 const StockResults = (props) => {
     const [stockList, setStockList] = useState([]);
-    let first = false;
-
-    const filterStocklist = (e) => {
-        const filteredStocks = stockList.filter(s => s.prevDay.c < 3.0 && s.prevDay.v * s.prevDay.c > 1000000).sort((a, b) => a.ticker.localeCompare(b.ticker))
-        setStockList(filteredStocks)
-    }
+    let first = true;
 
     useEffect(() => {
+        if(first){
+
         axios.get('https://api.polygon.io/v2/snapshot/locale/us/markets/stocks/tickers?apiKey=NXMkFFMU6CkA7wOLQUt52gJFbjHWpBpp')
             .then(response => response)
             .then(response => {
                 console.log(response.data)
                 setStockList(response.data.tickers)
+                first = false
             })
-
             .catch(error => {
-                throw (error);
-            })
-    }, [first])
+              throw (error);
+          }) }
+}, [])
+
+    const filterStocklist = (e) => {
+        e.preventDefault()
+        const filteredStocks = stockList.filter(s => s.prevDay.c < 3.0 && s.prevDay.v * s.prevDay.c > 1000000).sort((a, b) => a.ticker.localeCompare(b.ticker))
+        setStockList(filteredStocks)
+    }
+
+
 
     return (
         <>
@@ -30,10 +35,10 @@ const StockResults = (props) => {
             <table className="table table-bordered text-center">
                 <thead>
                     <tr>
-                        <th scope="col">Ticker</th>
-                        <th scope="col">Volume</th>
-                        <th scope="col">Close price</th>
-                        <th scope="col">Dollar Volume</th>
+                        <th scope="col">Ticker </th>
+                        <th scope="col">Volume </th>
+                        <th scope="col">Close price </th>
+                        <th scope="col">Dollar Volume </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -46,7 +51,7 @@ const StockResults = (props) => {
 
                                 <tr key={ticker}>
                                     <td>
-                                        <Link to={`/stocks/${ticker}`}>{ticker}</Link>
+                                        <Link to={`/stocks/${ticker}`} target='_blank'>{ticker}</Link>
                                     </td>
                                     <td>{prevDay.v}</td>
                                     <td>${prevDay.c}</td>
