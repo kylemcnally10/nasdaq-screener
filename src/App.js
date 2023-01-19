@@ -6,15 +6,13 @@ import StockResults from "./components/StockResults";
 import Error from "./components/Error";
 import { Routes, Route } from "react-router-dom";
 import CIKResults from './components/CIKResults';
-import axios from 'axios'
+import Disclaimer from './components/Disclaimer';
 
 function App() {
 
 
   return (
     <div className="App">
-
-
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/stocks" element={<StockResults />} />
@@ -22,6 +20,7 @@ function App() {
         <Route path="/stocks/cik/:cik" element={<Details />} />
         <Route path="/404" element={<Error />} />
       </Routes>
+      <Disclaimer />
     </div>
   );
 }

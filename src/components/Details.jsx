@@ -2,11 +2,14 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from "react-router";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios'
+import "bootstrap/dist/css/bootstrap.min.css";
 
 const StockResults = (props) => {
     const [stock, setStock] = useState('');
     const [businessAddress, setBusinessAddress] = useState('');
     const [mailingAddress, setMailingAddress] = useState('');
+    const [tickers, setTickers] = useState([]);
+    const [exchanges, setExchanges] = useState([]);
     const [forms, setForms] = useState([]);
     const { cik } = useParams();
     const navigate = useNavigate();
@@ -19,8 +22,9 @@ const StockResults = (props) => {
                 setStock(response.data)
                 setBusinessAddress(response.data.addresses.business)
                 setMailingAddress(response.data.addresses.mailing)
+                setTickers(response.data.tickers)
+                setExchanges(response.data.exchanges)
                 setForms(response.data.filings.recent.form)
-                console.log(forms)
             })
             .catch(error => {
                 throw (error);
@@ -29,33 +33,62 @@ const StockResults = (props) => {
 
     const handleBack = (e) => {
         e.preventDefault()
-        navigate('/stocks')
+        window.close()
     }
 
+
     return (
-        < div >
-            <button onClick={handleBack}>
-                Back
-            </button>
-            <h1>{stock.tickers}: {stock.name}</h1>
-            <h3>Exchanges: {stock.exchanges}</h3>
-            <a href={stock.website}>{stock.website}</a>
-            <h3>Business Address: {businessAddress.street1} {businessAddress.city}, {businessAddress.stateOrCountry} {businessAddress.zipCode}</h3>
-            <h3>Mailing Address: {mailingAddress.street1} {mailingAddress.city}, {mailingAddress.stateOrCountry} {mailingAddress.zipCode}</h3>
-            <h3>Phone Number: {stock.phone}</h3>
-            <h3>SIC: {stock.sicDescription}</h3>
-            <h3>Description:{stock.description}</h3>
-            <h3>Filings:
-                {
-                    forms.filter((f) => f == "S-1" || f == "S-1/A" || f == "S-2" || f == "S-3" || f == "S-3/A" || f == "S-4" || f == "S-8").map((f) => {
-                        return (
-                            <h3>{f}</h3>
-                        );
-                    }
-                    )
-                }
-            </h3>
-        </div >
+        <div className='w-100'>
+            <div className='mw-75 card bg-light border-dark m-3'>
+                <h1 className='card-header text-center'>{stock.name}</h1>
+                <div className='card-body text-dark'>
+                    <h3 className='card-title mb-3'>
+                        {
+                            tickers.map((ticker, idx) => {
+                                return (
+                                    <span key={idx}> {ticker}{idx === tickers.length - 1 ? "" : ","}</span>
+                                );
+                            }
+                            )
+                        }
+                    </h3>
+                    <p>
+                        {
+                            exchanges.map((exchange, idx) => {
+                                return (
+                                    <span key={idx}> {exchange}{idx === exchanges.length - 1 ? "" : ","}</span>
+                                );
+                            }
+                            )
+                        }
+                    </p>
+                    <p className='card-text'>SIC: {stock.sicDescription}</p>
+                    <p className='card-text'>Phone: {stock.phone}</p>
+                    <p className='card-text'>{stock.description}</p>
+                    <p>
+                        <a className='card-text' href={stock.website}>{stock.website}</a>
+                    </p>
+                    <p className='card-text'>Business: {businessAddress.street1} {businessAddress.city}, {businessAddress.stateOrCountryDescription} {businessAddress.zipCode}</p>
+                    <p className='card-text'>Mailing: {mailingAddress.street1} {mailingAddress.city}, {mailingAddress.stateOrCountryDescription} {mailingAddress.zipCode}</p>
+                    <p className='card-text'>
+                        Filings:
+                        {
+                            forms.filter((f) => f == "S-1" || f == "S-1/A" || f == "S-2" || f == "S-3" || f == "S-3/A" || f == "S-4" || f == "S-8").map((f, idx) => {
+                                return (
+                                    <span key={idx}> {f}{idx === forms.filter((f) => f == "S-1" || f == "S-1/A" || f == "S-2" || f == "S-3" || f == "S-3/A" || f == "S-4" || f == "S-8").length - 1 ? "" : ","}</span>
+                                );
+                            }
+                            )
+                        }
+                    </p>
+                </div>
+            </div >
+            <div className='text-center'>
+                <button className='btn btn-secondary' onClick={handleBack}>
+                    Close Tab
+                </button>
+            </div>
+        </div>
     )
 }
 
