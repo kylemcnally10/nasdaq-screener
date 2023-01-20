@@ -4,7 +4,7 @@ import axios from 'axios'
 
 const StockResults = (props) => {
     const [stockList, setStockList] = useState([]);
-    const price= useRef()
+    const price = useRef()
     const dollarVolume = useRef()
     let first = true;
 
@@ -28,21 +28,28 @@ const StockResults = (props) => {
         e.preventDefault()
         const filteredStocks = stockList.filter(s => s.prevDay.c < parseFloat(fPrice) && (s.prevDay.v * s.prevDay.c) > parseFloat(fDollarVolume)).sort((a, b) => a.ticker.localeCompare(b.ticker))
         setStockList(filteredStocks)
+        console.log("Price: ", fPrice)
+        console.log("Volume: ", fDollarVolume)
     }
 
 
 
     return (
         <>
-        <form onSubmit={(e) => {filterStocklist(e)}}>
-            <label>Max Price:</label>
-            <input type="number" ref= {price}></input>
-            <label>Min Dollar Volume:</label>
-            <input type="number" ref= {dollarVolume}></input>
-            <button className='btn btn-lg btn-success mb-3'>Generate Filtered List</button>
-        </form>
-            <div className='m-3 text-center'>
-                
+            <form className='m-3' onSubmit={(e) => { filterStocklist(e) }}>
+                <div className='mb-3 align-items-center w-100'>
+                    <label className='form-label'>Max Price:</label>
+                    <input className='form-control w-25' type="number" defaultValue={3} ref={price}></input>
+                </div>
+                <div className='mb-3'>
+                    <label className='form-label'>Min Dollar Volume:</label>
+                    <input className='form-control w-25' type="number" defaultValue={1000000} ref={dollarVolume}></input>
+                </div>
+                <div className='mb-3 w-25'>
+                    <button className='btn btn-lg btn-success w-100'>Generate Filtered List</button>
+                </div>
+            </form>
+            <div className='m-3'>
                 <table className="table table-striped table-bordered border-dark text-center mw-75">
                     <thead>
                         <tr>
@@ -64,7 +71,7 @@ const StockResults = (props) => {
                                         <td>
                                             <Link to={`/stocks/${ticker}`} target='_blank'>{ticker}</Link>
                                         </td>
-                                        <td>{prevDay.v}</td>
+                                        <td>{(prevDay.v).toLocaleString("en-US")}</td>
                                         <td>${prevDay.c}</td>
                                         <td>${(Math.round(prevDay.v * prevDay.c)).toLocaleString("en-US")}</td>
                                     </tr>
