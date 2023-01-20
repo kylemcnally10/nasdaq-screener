@@ -53,6 +53,7 @@ const StockResults = (props) => {
                         }
                     </h3>
                     <p>
+                        Exchanges:
                         {
                             exchanges.map((exchange, idx) => {
                                 return (
