@@ -1,16 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import axios from 'axios'
+import Cookies from 'universal-cookie';
 
 const StockResults = (props) => {
+    const cookies = new Cookies();
     const [stockList, setStockList] = useState([]);
     const price = useRef()
     const dollarVolume = useRef()
-    let first = true;
+    const cookiePin = cookies.get("pin");
+
 
     useEffect(() => {
-        if (first) {
-
             axios.get('https://api.polygon.io/v2/snapshot/locale/us/markets/stocks/tickers?apiKey=NXMkFFMU6CkA7wOLQUt52gJFbjHWpBpp')
                 .then(response => {
                     console.log(response.data)
@@ -19,7 +20,6 @@ const StockResults = (props) => {
                 .catch(error => {
                     throw (error);
                 })
-        }
     }, [])
 
     const filterStocklist = (e) => {
@@ -36,6 +36,11 @@ const StockResults = (props) => {
 
     return (
         <>
+        {
+            !cookiePin ?
+                <Navigate to ="/" replace/>
+            :
+            <>
             <form className='m-3' onSubmit={(e) => { filterStocklist(e) }}>
                 <div className='mb-3 align-items-center w-100'>
                     <label className='form-label'>Max Price:</label>
@@ -83,7 +88,8 @@ const StockResults = (props) => {
                     </tbody>
                 </table>
             </div>
-
+            </>
+}
         </>
     );
 }
