@@ -24,6 +24,7 @@ function Login() {
             navigate('/stocks')
         }
         else {
+            setErrors("Incorrect Pin")
             navigate('/')
         }
     }
@@ -34,31 +35,24 @@ function Login() {
                 cookiePin ?
                     <Navigate to="/stocks" replace />
                     :
-                    <div className="w-50 container d-flex flex-column justify-content-center" style={{ height: '100vh' }}>
-
-                        <div className="card">
-
+                    <div className="position-absolute top-50 start-50 translate-middle">
+                        <div className="text-danger text-center mb-3">{errors}</div>
+                        <div className="card border-dark">
                             <form>
-
-                                <h1 className="form-group p-2 mt-5">Login</h1>
-
-                                <input className="form-group p-2 m-2 "
-                                    placeholder="Enter Pin"
-                                    onChange={(e) => {
-                                        setPin(e.target.value)
-                                    }}
-                                />
-
-                                <div className="form-group p-2 m-2">
+                                <div className="m-3">
+                                    <input className="form-control w-100 text-center"
+                                        placeholder="Enter Pin" type="password"
+                                        onChange={(e) => {
+                                            setPin(e.target.value)
+                                        }}
+                                    />
+                                </div>
+                                <div className="form-group text-center m-3">
                                     <button className="btn btn-primary w-50" onClick={handleLoginSubmit}>Login</button>
                                 </div>
-
                             </form>
-
                         </div>
-
                     </div>
-
             }
         </>
     )
