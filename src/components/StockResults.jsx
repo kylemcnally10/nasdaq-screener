@@ -1,20 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from "react-router-dom";
 import axios from 'axios'
 
 const StockResults = (props) => {
     const [stockList, setStockList] = useState([]);
+    const price= useRef()
+    const dollarVolume = useRef()
     let first = true;
 
     useEffect(() => {
         if (first) {
 
             axios.get('https://api.polygon.io/v2/snapshot/locale/us/markets/stocks/tickers?apiKey=NXMkFFMU6CkA7wOLQUt52gJFbjHWpBpp')
-                .then(response => response)
                 .then(response => {
                     console.log(response.data)
                     setStockList(response.data.tickers)
-                    first = false
                 })
                 .catch(error => {
                     throw (error);
@@ -23,8 +23,10 @@ const StockResults = (props) => {
     }, [])
 
     const filterStocklist = (e) => {
+        let fPrice = price.current.value
+        let fDollarVolume = dollarVolume.current.value
         e.preventDefault()
-        const filteredStocks = stockList.filter(s => s.prevDay.c < 3.0 && s.prevDay.v * s.prevDay.c > 1000000).sort((a, b) => a.ticker.localeCompare(b.ticker))
+        const filteredStocks = stockList.filter(s => s.prevDay.c < parseFloat(fPrice) && (s.prevDay.v * s.prevDay.c) > parseFloat(fDollarVolume)).sort((a, b) => a.ticker.localeCompare(b.ticker))
         setStockList(filteredStocks)
     }
 
@@ -32,8 +34,15 @@ const StockResults = (props) => {
 
     return (
         <>
+        <form onSubmit={(e) => {filterStocklist(e)}}>
+            <label>Max Price:</label>
+            <input type="number" ref= {price}></input>
+            <label>Min Dollar Volume:</label>
+            <input type="number" ref= {dollarVolume}></input>
+            <button className='btn btn-lg btn-success mb-3'>Generate Filtered List</button>
+        </form>
             <div className='m-3 text-center'>
-                <button className='btn btn-lg btn-success mb-3' onClick={filterStocklist}>Generate Filtered List</button>
+                
                 <table className="table table-striped table-bordered border-dark text-center mw-75">
                     <thead>
                         <tr>
