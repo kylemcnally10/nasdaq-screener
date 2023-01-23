@@ -13,9 +13,14 @@ const StockResults = (props) => {
     const [tickers, setTickers] = useState([]);
     const [exchanges, setExchanges] = useState([]);
     const [forms, setForms] = useState([]);
+    const [primaryDocument, setPrimaryDocument] = useState([]);
+    const [accessionNumber, setAccessionNumber] = useState([]);
     const { cik } = useParams();
     const navigate = useNavigate();
     const cookiePin = cookies.get("pin");
+    const formKey = []; 
+    let flag = -1;
+
 
     useEffect(() => {
         axios.get(`https://data.sec.gov/submissions/CIK${cik}.json`)
@@ -28,6 +33,8 @@ const StockResults = (props) => {
                 setTickers(response.data.tickers)
                 setExchanges(response.data.exchanges)
                 setForms(response.data.filings.recent.form)
+                setPrimaryDocument(response.data.filings.recent.primaryDocument)
+                setAccessionNumber(response.data.filings.recent.accessionNumber)
             })
             .catch(error => {
                 throw (error);
@@ -39,6 +46,19 @@ const StockResults = (props) => {
         window.close()
     }
 
+for (let i = 0; i < forms.length; i++){
+    if(forms[i] == "S-1" || forms[i] == "S-1/A" || forms[i] == "S-2" || forms[i] == "S-3" || forms[i] == "S-3/A" || forms[i] == "S-4" || forms[i] == "S-8"){
+        formKey.push(i)
+    }
+}
+for(let i = 0; i < formKey.length; i++){
+    console.log("index: ", formKey[i])
+}
+
+for(let i = 0; i < accessionNumber.length; i++){
+    accessionNumber[i] = accessionNumber[i].split('-').join('');
+
+}
 
     return (
         <>
@@ -81,9 +101,12 @@ const StockResults = (props) => {
                         <p className='card-text'>
                             Filings:
                             {
-                                forms.filter((f) => f == "S-1" || f == "S-1/A" || f == "S-2" || f == "S-3" || f == "S-3/A" || f == "S-4" || f == "S-8").map((f, idx) => {
+                                forms.filter((f, idx) => {
+                                    return (f == "S-1" || f == "S-1/A" || f == "S-2" || f == "S-3" || f == "S-3/A" || f == "S-4" || f == "S-8")}).map((f, idx) => {
+                                    flag++
                                     return (
-                                        <span key={idx}> {f}{idx === forms.filter((f) => f == "S-1" || f == "S-1/A" || f == "S-2" || f == "S-3" || f == "S-3/A" || f == "S-4" || f == "S-8").length - 1 ? "" : ","}</span>
+                                        <a href={`https://www.sec.gov/Archives/edgar/data/${cik}/${accessionNumber[formKey[flag]]}/${primaryDocument[formKey[flag]]}`} target= "_blank" ><span key={idx}> {f}{idx === forms.filter((f) => f == "S-1" || f == "S-1/A" || f == "S-2" || f == "S-3" || f == "S-3/A" || f == "S-4" || f == "S-8").length - 1 ? "" : ","}</span></a>
+                                        
                                     );
                                 }
                                 )
