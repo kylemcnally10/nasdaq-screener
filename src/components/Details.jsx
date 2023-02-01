@@ -48,7 +48,7 @@ const StockResults = (props) => {
     }
 
     for (let i = 0; i < forms.length; i++) {
-        if (forms[i] === "S-1" || forms[i] === "S-1/A" || forms[i] === "S-2" || forms[i] === "S-3" || forms[i] === "S-3/A" || forms[i] === "S-4" || forms[i] === "S-8") {
+        if (forms[i] === "S-1" || forms[i] === "S-1/A" || forms[i] === "S-2" || forms[i] === "S-3" || forms[i] === "S-3/A" || forms[i] === "S-4" || forms[i] === "S-8" || forms[i] === "8-K") {
             formKey.push(i)
         }
     }
@@ -66,6 +66,7 @@ const StockResults = (props) => {
                         <div className='w-100'>
                             <div className='mw-75 card bg-light border-dark m-3'>
                                 <h1 className='card-header text-center'>{stock.name}</h1>
+                                <a href={`https://www.bloomberg.com/profile/company/${tickers[0]}:US`}>Bloomberg Profile</a>
                                 <div className='card-body text-dark'>
                                     <h3 className='card-title mb-3'>
                                         {
@@ -107,13 +108,13 @@ const StockResults = (props) => {
                                             <tbody>
                                                 {
                                                     forms.filter((f, idx) => {
-                                                        return (f === "S-1" || f === "S-1/A" || f === "S-2" || f === "S-3" || f === "S-3/A" || f === "S-4" || f === "S-8")
+                                                        return (f === "S-1" || f === "S-1/A" || f === "S-2" || f === "S-3" || f === "S-3/A" || f === "S-4" || f === "S-8" || f === "8-K")
                                                     }).map((f, idx) => {
                                                         flag++
                                                         return (
                                                             <tr>
                                                                 <td>
-                                                                    <a href={`https://www.sec.gov/Archives/edgar/data/${cik}/${accessionNumber[formKey[flag]]}/${primaryDocument[formKey[flag]]}`} target="_blank" rel="noreferrer"><span key={idx}> {f}{idx === forms.filter((f) => f === "S-1" || f === "S-1/A" || f === "S-2" || f === "S-3" || f === "S-3/A" || f === "S-4" || f === "S-8")}</span></a>
+                                                                    <a href={`https://www.sec.gov/Archives/edgar/data/${cik}/${accessionNumber[formKey[flag]]}/${primaryDocument[formKey[flag]]}`} target="_blank" rel="noreferrer"><span key={idx}> {f}{idx === forms.filter((f) => f === "S-1" || f === "S-1/A" || f === "S-2" || f === "S-3" || f === "S-3/A" || f === "S-4" || f === "S-8" || f === "8-K")}</span></a>
                                                                 </td>
                                                                 <td>
                                                                     {filingDate[formKey[flag]]}
