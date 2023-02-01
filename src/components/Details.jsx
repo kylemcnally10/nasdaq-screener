@@ -66,7 +66,6 @@ const StockResults = (props) => {
                         <div className='w-100'>
                             <div className='mw-75 card bg-light border-dark m-3'>
                                 <h1 className='card-header text-center'>{stock.name}</h1>
-                                <a href={`https://www.bloomberg.com/profile/company/${tickers[0]}:US`}>Bloomberg Profile</a>
                                 <div className='card-body text-dark'>
                                     <h3 className='card-title mb-3'>
                                         {
@@ -78,6 +77,9 @@ const StockResults = (props) => {
                                             )
                                         }
                                     </h3>
+                                    <p>
+                                        <a href={`https://www.bloomberg.com/profile/company/${tickers[0]}:US`}>Bloomberg Profile</a>
+                                    </p>
                                     <p>
                                         Exchanges:
                                         {
